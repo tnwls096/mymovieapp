@@ -167,18 +167,17 @@ def fetch_top_grossing_10y(as_of: date):
     return movies
 
 
-if st.button("10년 데이터 불러오기 (최초 1회는 시간이 걸립니다)"):
-    movies = fetch_top_grossing_10y(selected_date)
-    if not movies:
-        st.warning("데이터를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.")
-    else:
-        top_df = (
-            pd.DataFrame(movies.values())
-            .sort_values("audiAcc", ascending=False)
-            .head(5)
-            .reset_index(drop=True)
-        )
-        top_df.index = top_df.index + 1
-        top_df["audiAcc"] = top_df["audiAcc"].map(lambda v: f"{v:,}명")
-        top_df.columns = ["영화명", "누적관객"]
-        st.table(top_df)
+movies = fetch_top_grossing_10y(selected_date)
+if not movies:
+    st.warning("데이터를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.")
+else:
+    top_df = (
+        pd.DataFrame(movies.values())
+        .sort_values("audiAcc", ascending=False)
+        .head(5)
+        .reset_index(drop=True)
+    )
+    top_df.index = top_df.index + 1
+    top_df["audiAcc"] = top_df["audiAcc"].map(lambda v: f"{v:,}명")
+    top_df.columns = ["영화명", "누적관객"]
+    st.table(top_df)
